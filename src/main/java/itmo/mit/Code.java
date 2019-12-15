@@ -20,6 +20,10 @@ public final class Code {
         this.length = length;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public Code append(final boolean bit) {
         BitSet newCode = new BitSet(length + 1);
         newCode.or(code);
@@ -66,5 +70,28 @@ public final class Code {
     @Override
     public String toString() {
         return toBinaryString();
+    }
+
+    public static final class Builder {
+        private BitSet bits = new BitSet();
+        private int length = 0;
+
+        public Builder append(final boolean bit) {
+            this.bits.set(length, bit);
+            this.length++;
+            return this;
+        }
+
+        public Builder append(final boolean bit, final int repeat) {
+            for (int i = 0; i < repeat; i++) {
+                this.bits.set(length, bit);
+                this.length++;
+            }
+            return this;
+        }
+
+        public Code build() {
+            return new Code((BitSet) bits.clone(), length);
+        }
     }
 }
